@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <body>
+    <app-index></app-index>
+
+    <script type="module">
+      import View, { Store } from '../index.js';
+
+      const store = new Store({
+        state: {
+          name: 'Bill'
+        }
+      });
+
+      const template = `
+        <input type="text" id="name-input" placeholder="Change the name" />
+        <div id="name"></div>
+      `;
+
+      View.setStore( store );
+
+      View( 'app-index', {
+        template,
+
+        bindings() {
+          return {
+            '#name': store.state.name
+          }
+        },
+
+        events: {
+          'input #name-input': e => store.state.name = e.target.value
+        }
+      });
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "native-view",
+  "version": "1.0.0",
+  "description": "UI framework built w/ native web components",
+  "main": "index.js",
+  "scripts": {
+    "demo": "http-server .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/despreston/native-view.git"
+  },
+  "author": "Des Preston",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/despreston/native-view/issues"
+  },
+  "homepage": "https://github.com/despreston/native-view#readme",
+  "dependencies": {
+    "http-server": "0.11.1"
+  }
+}

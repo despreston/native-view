@@ -2,7 +2,8 @@ let store = null;
 
 const defaults = {
   template: '',
-  bindings: () => Object.create( null )
+  bindings: () => Object.create( null ),
+  events:   Object.create( null )
 };
 
 function generateClass( opts ) {

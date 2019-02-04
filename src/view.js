@@ -72,11 +72,12 @@ function generateClass( opts ) {
     }
 
     connectedCallback() {
+      this.root.appendChild( this.template.content.cloneNode( true ) );
+
       if ( typeof this.connected === 'function' ) {
         this.connected();
       }
 
-      this.root.appendChild( this.template.content.cloneNode( true ) );
       this.render();
     }
   }

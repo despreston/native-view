@@ -1,13 +1,14 @@
 let store = null;
 
 const defaults = {
-  template: '',
-  bindings: () => Object.create( null ),
-  events:   Object.create( null )
+  template:  '',
+  bindings:  () => Object.create( null ),
+  events:    Object.create( null ),
+  connected: () => null
 };
 
 function generateClass( opts ) {
-  const copy = class ViewElement extends HTMLElement {
+  return class ViewElement extends HTMLElement {
     constructor() {
       opts = { ...defaults, ...opts };
 
@@ -71,16 +72,14 @@ function generateClass( opts ) {
     }
 
     connectedCallback() {
+      if ( typeof this.connected === 'function' ) {
+        this.connected();
+      }
+
       this.root.appendChild( this.template.content.cloneNode( true ) );
       this.render();
     }
   }
-
-  if ( opts.connectedCallback ) {
-    copy.prototype.connectedCallback = opts.connectedCallback;
-  }
-
-  return copy;
 }
 
 function View( name, opts ) {

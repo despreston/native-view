@@ -1,2 +1,3 @@
-npm i
-npm run demo
+`npm i`
+
+`npm run demo`

@@ -32,4 +32,9 @@ export default class Store {
     this._subscribers.forEach( sub => sub( newState ) );
   }
 
+  install( viewInstance ) {
+    viewInstance.$store = this;
+    this.subscribe( viewInstance.render.bind( viewInstance ) );
+  }
+
 }

@@ -1,4 +1,4 @@
-let store = null;
+const plugins = [];
 
 const defaults = {
   template:  '',
@@ -7,8 +7,13 @@ const defaults = {
   connected: () => null
 };
 
-function generateClass( opts ) {
+function generateClass( name, opts ) {
   return class ViewElement extends HTMLElement {
+
+    static name() {
+      return name;
+    }
+
     constructor() {
       opts = { ...defaults, ...opts };
 
@@ -26,11 +31,12 @@ function generateClass( opts ) {
 
       this.resetTemplate( opts.template );
       this.root = this.attachShadow({ mode: 'open' });
+      this.registerPlugins();
       this.resetEventHandlers();
+    }
 
-      if ( store ) {
-        store.subscribe( this.render.bind( this ) );
-      }
+    registerPlugins() {
+      plugins.forEach( plugin => plugin.install( this ) );
     }
 
     resetEventHandlers() {
@@ -45,12 +51,14 @@ function generateClass( opts ) {
           handler = this[ handler ].bind( this );
         }
 
+        const self = this;
+
         this.root.addEventListener( type, function( ev ) {
           let { target } = ev;
 
           while ( target && target !== this.root ) {
             if ( target.matches && target.matches( selector ) ) {
-              handler.call( target, ev, target );
+              handler.call( self, ev, target );
             }
 
             target = target.parentNode;
@@ -71,8 +79,12 @@ function generateClass( opts ) {
       });
     }
 
-    connectedCallback() {
+    appendToRoot() {
       this.root.appendChild( this.template.content.cloneNode( true ) );
+    }
+
+    connectedCallback() {
+      this.appendToRoot();
 
       if ( typeof this.connected === 'function' ) {
         this.connected();
@@ -88,11 +100,13 @@ function View( name, opts ) {
     throw new Error('Component must include a name in kebab-case');
   }
 
-  window.customElements.define( name, generateClass( opts ) );
+  const ctor = generateClass( name, opts );
+  window.customElements.define( name, ctor );
+  return ctor;
 }
 
-View.setStore = function( storeInstance ) {
-  store = storeInstance;
-};
+View.use = function( plugin ) {
+  plugins.push( plugin );
+}
 
 export default View;

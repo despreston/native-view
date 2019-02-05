@@ -1,10 +1,21 @@
 <!doctype html>
 <html>
   <body>
-    <app-index></app-index>
+    <router-view></router-view>
 
     <script type="module">
-      import View, { Store } from '../index.js';
+      import View, { Store, Router } from '../index.js';
+
+      const router = new Router([
+        {
+          path: '/',
+          component: '/example/page-a.js'
+        },
+        {
+          path: '/another',
+          component: '/example/page-b.js'
+        }
+      ]);
 
       const store = new Store({
         state: {
@@ -12,26 +23,8 @@
         }
       });
 
-      const template = `
-        <input type="text" id="name-input" placeholder="Change the name" />
-        <div id="name"></div>
-      `;
-
-      View.setStore( store );
-
-      View( 'app-index', {
-        template,
-
-        bindings() {
-          return {
-            '#name': store.state.name
-          }
-        },
-
-        events: {
-          'input #name-input': e => store.state.name = e.target.value
-        }
-      });
+      View.use( store );
+      View.use( router );
     </script>
 
   </body>
